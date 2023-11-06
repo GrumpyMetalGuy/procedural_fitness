@@ -1,5 +1,5 @@
 [package]
-name = "randomness"
+name = "procedural_fitness"
 version = "0.1.0"
 authors = ["GrumpyMetalGuy"]
 license-file = "LICENSE"

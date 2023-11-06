@@ -9,7 +9,7 @@ use plotlib::page::Page;
 use plotlib::repr::Plot;
 use plotlib::style::{PointMarker, PointStyle};
 use plotlib::view::ContinuousView;
-use rand::{Rng, thread_rng};
+use rand::{thread_rng, Rng};
 use rand_xorshift::XorShiftRng;
 use rand_xoshiro::{rand_core::SeedableRng, Xoshiro256PlusPlus};
 
@@ -25,12 +25,12 @@ fn plot(full_path: &PathBuf, points: &Vec<u64>) -> Result<(), Error> {
             .map(|x| (x.0 as f64, *x.1 as f64))
             .collect::<Vec<_>>(),
     )
-        .point_style(
-            PointStyle::new()
-                .marker(PointMarker::Square) // setting the marker to be a square
-                .colour("#DD3355") // and a custom colour
-                .size(3.),
-        );
+    .point_style(
+        PointStyle::new()
+            .marker(PointMarker::Square) // setting the marker to be a square
+            .colour("#DD3355") // and a custom colour
+            .size(3.),
+    );
 
     let mut last_val = points[0] as i64;
 
@@ -52,11 +52,11 @@ fn plot(full_path: &PathBuf, points: &Vec<u64>) -> Result<(), Error> {
             .map(|x| (x.0 as f64, *x.1 as f64))
             .collect::<Vec<_>>(),
     )
-        .point_style(
-            PointStyle::new() // uses the default marker
-                .colour("#35C788")
-                .size(4.),
-        ); // and a different colour
+    .point_style(
+        PointStyle::new() // uses the default marker
+            .colour("#35C788")
+            .size(4.),
+    ); // and a different colour
 
     // The 'view' describes what set of data is drawn
     let v = ContinuousView::new()
@@ -71,13 +71,19 @@ fn plot(full_path: &PathBuf, points: &Vec<u64>) -> Result<(), Error> {
     let png_path = full_path.with_extension("png");
 
     let mut file = std::fs::File::create(png_path)?;
-    file.write_all( &svg_to_png(&Page::single(&v)
-        .dimensions(1920, 1080).to_svg().unwrap().to_string()).unwrap())?;
+    file.write_all(
+        &svg_to_png(
+            &Page::single(&v)
+                .dimensions(1920, 1080)
+                .to_svg()
+                .unwrap()
+                .to_string(),
+        )
+        .unwrap(),
+    )?;
 
     Ok(())
 }
-
-
 
 fn sequence_rng_plot(base_path: &PathBuf, range: u64, point_count: u64) -> Result<(), Error> {
     let base_vec = (0..range).collect_vec();
@@ -120,7 +126,11 @@ fn xorshift_rng_plot(base_path: &PathBuf, range: u64, point_count: u64) -> Resul
     plot(&final_path, &point_vec)
 }
 
-fn xoshiro256plusplus_rng_plot(base_path: &PathBuf, range: u64, point_count: u64) -> Result<(), Error> {
+fn xoshiro256plusplus_rng_plot(
+    base_path: &PathBuf,
+    range: u64,
+    point_count: u64,
+) -> Result<(), Error> {
     let mut rng = Xoshiro256PlusPlus::from_entropy();
 
     let point_vec = (0..point_count)
